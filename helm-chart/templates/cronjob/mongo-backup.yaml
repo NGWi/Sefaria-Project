@@ -1,4 +1,4 @@
-{{- if eq .Values.deployEnv "prod" }}
+{{- if eq .Values.backup.enabled }}
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
@@ -14,6 +14,9 @@ spec:
       backoffLimit: 1
       template:
         spec:
+          {{- if .Values.backup.serviceAccount }}
+          serviceAccount: {{ .Values.backup.serviceAccount }}
+          {{- end }}
           volumes:
           - name: backup-manager-secret
             secret:
@@ -26,7 +29,6 @@ spec:
               name: upload-dumps-{{ .Values.deployEnv }}
           - name: shared-volume
             emptyDir: {}
-
           affinity:
             podAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -37,7 +39,6 @@ spec:
                     values:
                     - mongo
                 topologyKey: kubernetes.io/hostname
-
           initContainers:
           - name: mongo-dumper
             image:  mongo:4.4
@@ -68,6 +69,8 @@ spec:
             env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /conf/BackupManagerKey.json
+            - name: BUCKET
+              value: {{ .Values.backup.bucket }}
             - name: SLACK_URL
               valueFrom:
                 secretKeyRef:
@@ -78,7 +81,6 @@ spec:
             resources:
               limits:
                 memory: "500Mi"
-
           restartPolicy: OnFailure
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 2

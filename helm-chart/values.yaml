@@ -27,7 +27,16 @@ previousServicesCount: "3"
 
 # write the full path to the back up if you want to start the environment from
 # a specific backup else leave blank.
-mongoSnapshotLocation:
+restore:
+  bucket: 
+  filename:
+  serviceAccount:
+
+# config to backup environment DB 
+backup:
+  enabled: false
+  bucket: sefaria-mongo-backup
+# serviceAccount:
 
 web:
   containerImage:
@@ -57,7 +66,7 @@ web:
   secrets:
     googleClient:
       # for local testing purposes or CI pipeline use input a value
-      # data:
+      # data::! 
       # Reference to an existing secret in the cluster
       ref:
     logging:

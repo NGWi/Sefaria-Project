@@ -1,4 +1,4 @@
-{{- if eq .Values.deployEnv "prod" }}
+{{- if eq .Values.backup.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
