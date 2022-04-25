@@ -9,7 +9,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: restore-mongo-{{ .Values.deployEnv }}
+  name: {{ printf "restore-mongo-%s" .Values.deployEnv | trunc 253}}
   labels:
     deployEnv: {{ .Values.deployEnv | quote }}
     {{- include "sefaria.labels" . | nindent 4 }}

@@ -7,7 +7,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: destroy-mongo-{{ .Values.deployEnv }}
+  name: {{ printf "destroy-mongo-%s" .Values.deployEnv | trunc 253}}
   labels:
     deployEnv: {{ .Values.deployEnv | quote }}
     {{- include "sefaria.labels" . | nindent 4 }}
